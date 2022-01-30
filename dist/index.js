@@ -659,7 +659,9 @@ const mergeFileLists = ({ summaryFileList, baseSummaryFileList, finalFileList })
         let baseCoveragePct = null;
         let diff = null;
         const summary = (0, exports.buildMergeItem)(jsonSum);
-        const summaryCoveragePct = summary.parsedTotal.statements.pct;
+        const summaryCoveragePct = summary.parsedTotal.statements.pct === 'Unknown'
+            ? 0
+            : summary.parsedTotal.statements.pct;
         const final = finalFileList.find(item => item.app === summary.app);
         const finalParsed = final ? final.parsed : '';
         if (!final) {
@@ -668,7 +670,10 @@ const mergeFileLists = ({ summaryFileList, baseSummaryFileList, finalFileList })
         const found = baseSummaryFileList.find(item => item.app === summary.app);
         if (found) {
             base = (0, exports.buildMergeItem)(found);
-            baseCoveragePct = base.parsedTotal.statements.pct;
+            baseCoveragePct =
+                base.parsedTotal.statements.pct === 'Unknown'
+                    ? 0
+                    : base.parsedTotal.statements.pct;
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON
             // use Number.EPSILON so rounding of 0.0005 is correct
             diff =

@@ -11,6 +11,8 @@ import {omit as _omit} from 'lodash'
 import {buildComment} from './comment'
 import {processCoverageFiles} from './json-coverage'
 
+const MAX_GH_COMMENT_SIZE = 65536
+
 export const main = async ({
   coverageRan,
   coverageFolder,
@@ -44,6 +46,9 @@ export const main = async ({
         )}`
       )
       commentBody = buildComment({results})
+      if (commentBody.length >= MAX_GH_COMMENT_SIZE) {
+        commentBody = buildComment({results, compact: true})
+      }
       hiddenHeader = hiddenHeaderForCoverage
     } else {
       logWarn(`Coverage Not Ran: NOT processing coverage files`)

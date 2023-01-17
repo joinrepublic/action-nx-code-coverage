@@ -9,6 +9,18 @@ describe('test-case coverage degradation', () => {
   beforeEach(() => {
     jest.spyOn(core, 'debug').mockImplementation(() => {})
     jest.spyOn(core, 'warning').mockImplementation(() => {})
+    jest.spyOn(github, 'getOctokit').mockImplementation(() => {
+      return {
+        rest: {
+          gists: {
+            // eslint-disable-next-line @typescript-eslint/promise-function-async
+            update: () => {
+              return Promise.resolve({status: 200})
+            }
+          }
+        }
+      } as ReturnType<typeof github.getOctokit>
+    })
 
     jest.spyOn(github.context, 'repo', 'get').mockImplementation(() => {
       return {
